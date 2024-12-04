@@ -38,3 +38,59 @@ CREATE TABLE IF NOT EXISTS borrowed_books (
 
 --------------------Task 2----------------------
 
+INSERT INTO authors (author_name) VALUES ('James Clear');
+INSERT INTO authors (author_name) VALUES ('Alieka Volskykh');
+
+INSERT INTO genres (genre_name) VALUES ('Self-help');
+INSERT INTO genres (genre_name) VALUES ('Teenage fantasy');
+
+INSERT INTO users (username, email) VALUES ('Sara James', 'sara.james15@gmail.com');
+INSERT INTO users (username, email) VALUES ('Lina Khimko', 'likhi769@gmail.com');
+
+INSERT INTO books (title, publication_year, author_id, genre_id) VALUES ('Atomic Habits', 2018, 1, 1);
+INSERT INTO books (title, publication_year, author_id, genre_id) VALUES ('Mila Rudyk', 2011, 2, 2);
+
+INSERT INTO borrowed_books (book_id, user_id, borrow_date) VALUES (1, 1, CURDATE());
+INSERT INTO borrowed_books (book_id, user_id, borrow_date, return_date) VALUES (2, 2, '2023-07-03', '2023-08-25');
+
+
+--------------------Task 3----------------------
+
+USE mydb;
+
+
+SELECT * FROM order_details
+INNER JOIN orders_ ON order_details.order_id = orders_.id
+INNER JOIN products_ ON order_details.product_id = products_.id
+INNER JOIN suppliers ON products_.supplier_id = suppliers.id
+INNER JOIN categories ON products_.category_id = categories.id
+INNER JOIN customers ON orders_.customer_id = customers.id
+INNER JOIN employees ON orders_.employee_id = employees.employee_id
+INNER JOIN shippers ON orders_.shipper_id = shippers.id
+
+
+--------------------Task 4----------------------
+
+До скріншоту р4_2_LEFT_RIGHT_JOIN
+Кількість рядків у результаті зміни INNER JOIN на LEFT RIGHT JOIN не змінилася.
+Це означає, що дочірні таблиці з FOREIGN KEYs містять ключі до усіх рядків батьківських таблиць.
+Тобто у батьківських таблицях немає даних, які не були використані у інших (дочірніх) таблицях.
+
+
+SQL query
+
+USE mydb;
+
+SELECT categories.name AS 'Name', COUNT(*) AS 'Amount', AVG(order_details.quantity) AS 'Avg quantity' FROM order_details
+INNER JOIN orders_ ON order_details.order_id = orders_.id
+INNER JOIN products_ ON order_details.product_id = products_.id
+INNER JOIN suppliers ON products_.supplier_id = suppliers.id
+INNER JOIN categories ON products_.category_id = categories.id
+INNER JOIN customers ON orders_.customer_id = customers.id
+INNER JOIN employees ON orders_.employee_id = employees.employee_id
+INNER JOIN shippers ON orders_.shipper_id = shippers.id
+WHERE orders_.employee_id BETWEEN 4 AND 10
+GROUP BY categories.name
+HAVING AVG(order_details.quantity) > 21
+ORDER BY COUNT(*) DESC
+LIMIT 4 OFFSET 1
